@@ -10,7 +10,7 @@ jobs:
     steps:
       -uses: action/checkout@v1
       -name: Set up Python 3.8
-       uses: actions/setup-python@v1
+      -uses: actions/setup-python@v1
        with:
          python-version: 3.8
       -name: install gcc-8
@@ -35,7 +35,7 @@ jobs:
     steps:
       -uses: action/checkout@v1
       -name: Set up Python 3.8
-       uses: actions/setup-python@v1
+      -uses: actions/setup-python@v1
        with:
          python-version: 3.8
       -name: install clang-9
