@@ -11,7 +11,7 @@ A repository for bench marking at and [] on vector.
 4. `make`
 5. `./bin/bench`
 
-# Output
+## Output
 
 ```
 Running ./Build/bin/bench
