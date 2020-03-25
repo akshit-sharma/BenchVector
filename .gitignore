@@ -1,0 +1,10 @@
+*.swp
+
+compile_commands.json
+
+build
+Build
+
+.clangd/
+.gdb_history
+
