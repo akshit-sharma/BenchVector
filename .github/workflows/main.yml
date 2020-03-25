@@ -1,0 +1,54 @@
+name: C/C++ CI
+
+on: [push]
+
+jobs:
+  build-ubuntu-gcc:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      -uses: action/checkout@v1
+      -name: Set up Python 3.8
+       uses: actions/setup-python@v1
+       with:
+         python-version: 3.8
+      -name: install gcc-8
+       run: |
+         sudo apt-get update
+         sudo apt-get install -y gcc-8
+      -name: install/upgrade pip
+       run: python -m pip install --upgrade pip
+      -name: install conan
+       run: pip install conan
+      -name: configure
+       run: mkdir build && cd build && cmake -DCMAKE_CXX_FLAGS="-Werror" -DCMAKE_CXX_COMPILER=g++ -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
+      -name: build
+       run: cmake --build build
+      -name: bench
+       run: cd build && ./bin/bench
+
+  build-ubuntu-clang:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      -uses: action/checkout@v1
+      -name: Set up Python 3.8
+       uses: actions/setup-python@v1
+       with:
+         python-version: 3.8
+      -name: install clang-9
+       run: |
+         sudo apt-get update
+         sudo apt-get install -y clang-9
+      -name: install/upgrade pip
+       run: python -m pip install --upgrade pip
+      -name: install conan
+       run: pip install conan
+      -name: configure
+       run: mkdir build && cd build && cmake -DCMAKE_CXX_FLAGS="-Werror" -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
+      -name: build
+       run: cmake --build build
+      -name: bench
+       run: cd build && ./bin/bench
