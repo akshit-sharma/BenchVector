@@ -2,7 +2,7 @@
 A repository for bench marking at and [] on vector.
 
 ## Prerequisites
-[conan](https://docs.conan.io/en/1.7/installation.html) `pip install conan`
+[conan](https://docs.conan.io/en/1.7/installation.html) [`pip install conan`]
 
 ## To build
 1. clone the repository and `cd` into root of repo.
@@ -10,6 +10,8 @@ A repository for bench marking at and [] on vector.
 3. `cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..`
 4. `make`
 5. `./bin/bench`
+
+# Output
 
 ```
 Running ./Build/bin/bench
