@@ -1,11 +1,12 @@
 # BenchVector ![C/C++ CI](https://github.com/akshit-sharma/BenchVector/workflows/C/C++%20CI/badge.svg)
-A repository for bench marking at and [] on vector.
+A repository for benchmarking at and [] on vector.
 
 ## Prerequisites
 [conan](https://docs.conan.io/en/1.7/installation.html) [`pip install conan`]
 
 ## To build
-1. clone the repository and `cd` into root of repo.
+1. `git clone https://github.com/akshit-sharma/BenchVector.git`
+2. `cd BenchVector`
 2. `mkdir build && cd build`
 3. `cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..`
 4. `make`
