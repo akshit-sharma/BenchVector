@@ -1,16 +1,47 @@
 name: C/C++ CI
 
-on: [push]
+on: [push, pull_request, fork]
 
 jobs:
-  build:
+   
+  build-default:
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        type: [Debug, Release]
+        os: [ubuntu-latest, ubuntu-18.04, ubuntu-16.04]
 
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v1
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.8
+      - name: install/upgrade pip
+        run: python -m pip install --upgrade pip
+      - name: install conan
+        run: pip install conan
+      - name: configure
+        run: mkdir build && cd build && cmake -DCMAKE_CXX_FLAGS="-Werror" -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
+        env:
+          BUILD_TYPE: ${{ matrix.type }}
+      - name: build
+        run: cmake --build build
+      - name: bench
+        run: cd build && ./bin/bench
+
+  build-custom-compiler:
     
     strategy:
       matrix:
-        cc: [g++-8, clang++-9]
+        cxx: [g++-8, clang++-9]
         type: [Debug, Release]
+        os: [ubuntu-latest]
+
+    runs-on: ${{ matrix.os }}
 
     steps:
       - uses: actions/checkout@v1
@@ -21,15 +52,49 @@ jobs:
       - name: install compiler
         run: |
           sudo apt-get update
-          sudo apt-get install -y ${{ matrix.cc }}
+          sudo apt-get install -y ${{ matrix.cxx }}
       - name: install/upgrade pip
         run: python -m pip install --upgrade pip
       - name: install conan
         run: pip install conan
-      - name: configure
-        run: mkdir build && cd build && cmake -DCMAKE_CXX_FLAGS="-Werror" -DCMAKE_CXX_COMPILER=${CC} -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
         env:
-          CC: ${{ matrix.cc }}
+          CXX: ${{ matrix.cxx }}
+      - name: configure
+        run: mkdir build && cd build && cmake -DCMAKE_CXX_FLAGS="-Werror" -DCMAKE_CXX_COMPILER=${CXX} -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
+        env:
+          CXX: ${{ matrix.cxx }}
+          BUILD_TYPE: ${{ matrix.type }}
+      - name: build
+        run: cmake --build build
+      - name: bench
+        run: cd build && ./bin/bench
+
+  build-old:
+    
+    strategy:
+      matrix:
+        cxx: [g++-7]
+        type: [Debug, Release]
+        os: [ubuntu-16.04]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v1
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.8
+      - name: install/upgrade pip
+        run: python -m pip install --upgrade pip
+      - name: install conan
+        run: pip install conan
+        env:
+          CXX: ${{ matrix.cxx }}
+      - name: configure
+        run: mkdir build && cd build && cmake -DCMAKE_CXX_FLAGS="-Werror" -DCMAKE_CXX_COMPILER=${CXX} -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
+        env:
+          CXX: ${{ matrix.cxx }}
           BUILD_TYPE: ${{ matrix.type }}
       - name: build
         run: cmake --build build
