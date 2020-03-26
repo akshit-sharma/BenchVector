@@ -2,6 +2,7 @@
 A repository for benchmarking at and [] on vector.
 
 ## Prerequisites
+Compiler with C++14 support (gcc > 6.1, clang > 3.4)
 [conan](https://docs.conan.io/en/1.7/installation.html) [`pip install conan`]
 
 ## To build
